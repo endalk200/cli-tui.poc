@@ -1,15 +1,33 @@
-# react
+# CLI & TUI Experimentation Lab
 
-To install dependencies:
+A proof-of-concept repository for experimenting with CLI applications and Terminal User Interfaces (TUIs) across multiple programming languages and frameworks.
 
-```bash
-bun install
-```
+## Structure
 
-To run:
+The repository is organized by language, with each containing experiments using different frameworks and libraries:
 
-```bash
-bun run src/index.tsx
-```
+### Go
 
-This project was created using `bun create tui`. [create-tui](https://git.new/create-tui) is the easiest way to get started with OpenTUI.
+- **Bubble Tea** - TUI framework
+- **Cobra** - CLI framework
+- **Viper** - Configuration management
+
+### TypeScript
+
+- **OpenTUI** vs **Ink** - TUI frameworks comparison
+- **Commander** - CLI framework
+
+### Python
+
+- **Click** - CLI framework
+- **Rich** - TUI framework
+- **Prompt Toolkit** - Interactive CLI framework
+
+## Purpose
+
+This repository serves as a playground for:
+
+- Learning and comparing different CLI/TUI frameworks
+- Evaluating developer experience across languages
+- Building reusable patterns and components
+- Prototyping CLI application concepts
