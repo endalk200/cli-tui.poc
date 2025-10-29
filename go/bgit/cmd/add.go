@@ -23,20 +23,20 @@ and new untracked files. Patterns (globs) within shell expansion also work.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cwd, err := os.Getwd()
 		if err != nil {
-			exitWithError(fmt.Errorf("cannot determine working directory: %w", err))
+			panic(fmt.Errorf("cannot determine working directory: %w", err))
 		}
 
 		cli, err := NewGitCLI(cwd)
 		if err != nil {
 			if errors.Is(err, git.ErrRepositoryNotExists) {
-				exitWithError(fmt.Errorf("no git repository found at %s", cwd))
+				panic(fmt.Errorf("no git repository found at %s", cwd))
 			}
-			exitWithError(err)
+			panic(err)
 		}
 
 		worktree, err := cli.repo.Worktree()
 		if err != nil {
-			exitWithError(fmt.Errorf("failed to access worktree: %w", err))
+			panic(fmt.Errorf("failed to access worktree: %w", err))
 		}
 
 		all, _ := cmd.Flags().GetBool("all")
@@ -46,7 +46,7 @@ and new untracked files. Patterns (globs) within shell expansion also work.`,
 			// Derive list from status; include modified, added(untracked), deleted (for remove) but ignore clean.
 			status, err := worktree.Status()
 			if err != nil {
-				exitWithError(fmt.Errorf("failed to compute status: %w", err))
+				panic(fmt.Errorf("failed to compute status: %w", err))
 			}
 			for path, s := range status {
 				if s.Worktree != git.Unmodified || s.Staging != git.Unmodified {
@@ -56,7 +56,7 @@ and new untracked files. Patterns (globs) within shell expansion also work.`,
 			}
 		} else {
 			if len(args) == 0 {
-				exitWithError(errors.New("no paths provided (specify files or use --all)"))
+				panic(errors.New("no paths provided (specify files or use --all)"))
 			}
 			for _, raw := range args {
 				// Normalize path for consistency; relative -> absolute relative to repo root

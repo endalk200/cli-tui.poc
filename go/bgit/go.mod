@@ -3,6 +3,7 @@ module github.com/endalk200/bgit
 go 1.24.1
 
 require (
+	github.com/go-git/go-git v4.7.0+incompatible
 	github.com/go-git/go-git/v6 v6.0.0-20251027195115-1e327a99f5f4
 	github.com/openai/openai-go/v3 v3.6.1
 	github.com/spf13/cobra v1.10.1
@@ -18,6 +19,7 @@ require (
 	github.com/go-git/go-billy/v6 v6.0.0-20251022185412-61e52df296a5 // indirect
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/kevinburke/ssh_config v1.4.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/pjbgf/sha1cd v0.5.0 // indirect
@@ -30,4 +32,5 @@ require (
 	golang.org/x/crypto v0.43.0 // indirect
 	golang.org/x/net v0.46.0 // indirect
 	golang.org/x/sys v0.37.0 // indirect
+	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect
 )
