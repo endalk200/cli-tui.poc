@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/endalk200/bgit/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -27,14 +29,23 @@ Currently implemented subcommands:
   status  – Show repository status (staged / unstaged / untracked) with color
   add     – Stage file(s) or all changes with --all
   commit  – Create a commit; auto-generates a message when -m not supplied
+  config  – View and manage configuration (AI provider settings)
 
 Examples:
   bgit status
   bgit add --all
   bgit add path/to/file.go another/file.txt
+  bgit config view
+  bgit config set-provider OpenRouter
+
+Configuration:
+  bgit uses Viper for configuration management. Settings are stored in
+  ~/.bgit.yaml by default. Use 'bgit config' to manage settings.
 
 More commands will be added incrementally as learning exercises.`,
 }
+
+var cfgFile string
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
@@ -46,13 +57,24 @@ func Execute() {
 }
 
 func init() {
+	// Initialize config before running any commands
+	cobra.OnInitialize(initConfig)
+
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.bgit.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.bgit.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+// initConfig reads in config file and ENV variables if set.
+func initConfig() {
+	if err := config.InitConfig(cfgFile); err != nil {
+		fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
+		os.Exit(1)
+	}
 }

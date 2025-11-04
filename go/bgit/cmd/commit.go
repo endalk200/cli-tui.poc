@@ -68,19 +68,14 @@ OPENAI_API_KEY to be present in the environment.`,
 				os.Exit(1)
 			}
 
-			// Try OpenAI first, fallback to OpenRouter
-			var generatedMessage string
-			for _, provider := range config.Providers {
-				generatedMessage, err = commitgenService.GenerateCommitMessage(stagedDiff, provider)
-				if err == nil {
-					break
-				}
-				fmt.Fprintf(os.Stderr, "warning: %s provider failed: %v\n", provider.Name, err)
-			}
+			// Get configured provider
+			provider := config.GetProvider()
+			fmt.Printf("Using AI provider: %s (env: %s)\n", provider.Name, provider.EnvName)
 
-			if generatedMessage == "" {
-				fmt.Fprintf(os.Stderr, "error: failed to generate commit message with all providers\n")
-				fmt.Println("Hint: Provide a message with -m flag or set OPENAI_API_KEY environment variable")
+			generatedMessage, err := commitgenService.GenerateCommitMessage(stagedDiff, provider)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "error: %s provider failed: %v\n", provider.Name, err)
+				fmt.Printf("Hint: Ensure %s is set or change provider in config file\n", provider.EnvName)
 				os.Exit(1)
 			}
 

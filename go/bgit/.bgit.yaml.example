@@ -1,0 +1,15 @@
+# bgit Configuration File
+# Place this file at ~/.bgit.yaml or specify with --config flag
+
+# AI Provider Configuration
+# Supported providers: OpenAI, OpenRouter, Anthropic
+ai_provider:
+  # Provider name (OpenAI, OpenRouter, or Anthropic)
+  name: OpenAI
+  
+  # Environment variable name for API key
+  # OpenAI uses: OPENAI_API_KEY
+  # OpenRouter uses: OPENROUTER_API_KEY
+  # Anthropic uses: ANTHROPIC_API_KEY
+  env_name: OPENAI_API_KEY
+
