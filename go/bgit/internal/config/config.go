@@ -1,9 +1,8 @@
 package config
 
 type Provider struct {
-	Name          string
-	EnvName       string
-	APIKeyEnvName string
+	Name    string
+	EnvName string
 }
 
 var Providers = []Provider{

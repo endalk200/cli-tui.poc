@@ -85,10 +85,10 @@ func GenerateCommitMessage(diff string, provider config.Provider) (string, error
 }
 
 func OpenAIChatCompletion(prompt string, API_KEY string) (string, error) {
-	context := context.Background()
+	ctx := context.Background()
 
 	client := openai.NewClient(option.WithAPIKey(API_KEY))
-	response, err := client.Chat.Completions.New(context, openai.ChatCompletionNewParams{
+	response, err := client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{
 		Messages: []openai.ChatCompletionMessageParamUnion{
 			openai.UserMessage(prompt),
 		},
@@ -111,7 +111,7 @@ func OpenAIChatCompletion(prompt string, API_KEY string) (string, error) {
 }
 
 func OpenRouterChatCompletion(prompt string, API_KEY string) (string, error) {
-	context := context.Background()
+	ctx := context.Background()
 
 	header := http.Header{}
 	header.Set("X-Title", "bgit")
@@ -120,7 +120,7 @@ func OpenRouterChatCompletion(prompt string, API_KEY string) (string, error) {
 		option.WithAPIKey(API_KEY),
 		option.WithBaseURL("https://openrouter.ai/api/v1"),
 	)
-	response, err := client.Chat.Completions.New(context, openai.ChatCompletionNewParams{
+	response, err := client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{
 		Messages: []openai.ChatCompletionMessageParamUnion{
 			openai.UserMessage(prompt),
 		},

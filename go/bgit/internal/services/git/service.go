@@ -24,11 +24,11 @@ func (e ErrNotAGitRepository) Error() string {
 	return fmt.Sprintf("git: %s is not a git repository", e.Path)
 }
 
-type ErrUnkwownGitIssue struct {
+type ErrUnknownGitIssue struct {
 	Message string
 }
 
-func (e ErrUnkwownGitIssue) Error() string {
+func (e ErrUnknownGitIssue) Error() string {
 	return fmt.Sprintf("git: unknown git issue: %s", e.Message)
 }
 
@@ -41,7 +41,7 @@ func NewGitClient(repoPath string) (*GitCLI, error) {
 			}
 		}
 
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -52,14 +52,14 @@ func NewGitClient(repoPath string) (*GitCLI, error) {
 func (g *GitCLI) StagedFiles() ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
 
 	status, err := workTree.Status()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -77,7 +77,7 @@ func (g *GitCLI) StagedFiles() ([]string, error) {
 func (g *GitCLI) AddFiles(files []string) ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -86,7 +86,7 @@ func (g *GitCLI) AddFiles(files []string) ([]string, error) {
 
 	for _, file := range files {
 		if _, addErr := workTree.Add(file); addErr != nil {
-			return nil, ErrUnkwownGitIssue{
+			return nil, ErrUnknownGitIssue{
 				Message: addErr.Error(),
 			}
 		}
@@ -99,14 +99,14 @@ func (g *GitCLI) AddFiles(files []string) ([]string, error) {
 func (g *GitCLI) AddAllFiles() ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
 
 	status, err := workTree.Status()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -120,7 +120,7 @@ func (g *GitCLI) AddAllFiles() ([]string, error) {
 		Path: ".",
 	})
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -132,14 +132,14 @@ func (g *GitCLI) AddAllFiles() ([]string, error) {
 func (g *GitCLI) ModifiedFiles() ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
 
 	status, err := workTree.Status()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -157,14 +157,14 @@ func (g *GitCLI) ModifiedFiles() ([]string, error) {
 func (g *GitCLI) AddedFiles() ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
 
 	status, err := workTree.Status()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -181,14 +181,14 @@ func (g *GitCLI) AddedFiles() ([]string, error) {
 func (g *GitCLI) DeletedFiles() ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
 
 	status, err := workTree.Status()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -206,14 +206,14 @@ func (g *GitCLI) DeletedFiles() ([]string, error) {
 func (g *GitCLI) RenamedFiles() ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
 
 	status, err := workTree.Status()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -231,14 +231,14 @@ func (g *GitCLI) RenamedFiles() ([]string, error) {
 func (g *GitCLI) UntrackedFiles() ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
 
 	status, err := workTree.Status()
 	if err != nil {
-		return nil, ErrUnkwownGitIssue{
+		return nil, ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -256,23 +256,23 @@ func (g *GitCLI) UntrackedFiles() ([]string, error) {
 func (g *GitCLI) GetStagedFilesDiff(stagedFiles []string) (string, error) {
 	var diff string
 	for _, file := range stagedFiles {
-		cmd := exec.Command("git", "diff", file)
+		cmd := exec.Command("git", "diff", "--cached", file)
 		cmd.Dir = g.path
 		out, err := cmd.CombinedOutput()
 		if err != nil {
-			return "", ErrUnkwownGitIssue{Message: err.Error()}
+			return "", ErrUnknownGitIssue{Message: err.Error()}
 		}
 
 		diff += string(out)
 	}
 
-	return string(diff), nil
+	return diff, nil
 }
 
 func (g *GitCLI) CurrentBranch() (string, error) {
 	headRef, err := g.repo.Head()
 	if err != nil {
-		return "", ErrUnkwownGitIssue{
+		return "", ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -286,14 +286,14 @@ func (g *GitCLI) CurrentBranch() (string, error) {
 func (g *GitCLI) Commit(message string) error {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
-		return ErrUnkwownGitIssue{
+		return ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
 
 	repoConfig, err := g.repo.Config()
 	if err != nil {
-		return ErrUnkwownGitIssue{
+		return ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
@@ -310,14 +310,14 @@ func (g *GitCLI) Commit(message string) error {
 		All:       false,
 	})
 	if err != nil {
-		return ErrUnkwownGitIssue{
+		return ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
 
 	commitObj, err := g.repo.CommitObject(commitHash)
 	if err != nil {
-		return ErrUnkwownGitIssue{
+		return ErrUnknownGitIssue{
 			Message: err.Error(),
 		}
 	}
