@@ -6,13 +6,11 @@ import (
 	"os"
 	"path/filepath"
 
+	internal "github.com/endalk200/bgit/internal/services/git"
 	"github.com/go-git/go-git/v6"
 	"github.com/spf13/cobra"
 )
 
-// addCmd stages changes similar to `git add`. It supports either specifying
-// individual file paths or using the --all flag to stage everything reported
-// by worktree status.
 var addCmd = &cobra.Command{
 	Use:   "add [files...]",
 	Short: "Stage file contents into the index",
@@ -26,34 +24,26 @@ and new untracked files. Patterns (globs) within shell expansion also work.`,
 			panic(fmt.Errorf("cannot determine working directory: %w", err))
 		}
 
-		cli, err := NewGitCLI(cwd)
+		client, err := internal.NewGitClient(cwd)
 		if err != nil {
-			if errors.Is(err, git.ErrRepositoryNotExists) {
-				panic(fmt.Errorf("no git repository found at %s", cwd))
-			}
-			panic(err)
-		}
-
-		worktree, err := cli.repo.Worktree()
-		if err != nil {
-			panic(fmt.Errorf("failed to access worktree: %w", err))
+			panic(err.Error())
 		}
 
 		all, _ := cmd.Flags().GetBool("all")
 		var targets []string
 
 		if all {
-			// Derive list from status; include modified, added(untracked), deleted (for remove) but ignore clean.
-			status, err := worktree.Status()
+			response, err := client.ModifiedFiles()
 			if err != nil {
-				panic(fmt.Errorf("failed to compute status: %w", err))
+				panic(err.Error())
 			}
-			for path, s := range status {
-				if s.Worktree != git.Unmodified || s.Staging != git.Unmodified {
-					// We attempt to stage all types; deletions are handled implicitly when path missing.
-					targets = append(targets, path)
-				}
+
+			if len(response) == 0 {
+				fmt.Println("Nothing to stage")
+				return
 			}
+
+			respo, err := client.Addj
 		} else {
 			if len(args) == 0 {
 				panic(errors.New("no paths provided (specify files or use --all)"))

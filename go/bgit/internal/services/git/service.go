@@ -34,7 +34,6 @@ func (e ErrUnkwownGitIssue) Error() string {
 
 func NewGitClient(repoPath string) (*GitCLI, error) {
 	repo, err := git.PlainOpen(repoPath)
-
 	if err != nil {
 		if errors.Is(err, git.ErrRepositoryNotExists) {
 			return nil, ErrNotAGitRepository{
@@ -75,6 +74,38 @@ func (g *GitCLI) StagedFiles() ([]string, error) {
 	return stagedFiles, nil
 }
 
+func (g *GitCLI) AddAllFiles() ([]string, error) {
+	workTree, err := g.repo.Worktree()
+	if err != nil {
+		return nil, ErrUnkwownGitIssue{
+			Message: err.Error(),
+		}
+	}
+
+	status, err := workTree.Status()
+	if err != nil {
+		return nil, ErrUnkwownGitIssue{
+			Message: err.Error(),
+		}
+	}
+
+	if status.IsClean() {
+		return nil, errors.New("nothing to add")
+	}
+
+	err = workTree.AddWithOptions(&git.AddOptions{
+		All:  true,
+		Path: ".",
+	})
+	if err != nil {
+		return nil, ErrUnkwownGitIssue{
+			Message: err.Error(),
+		}
+	}
+
+	return nil, nil
+}
+
 func (g *GitCLI) ModifiedFiles() ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
@@ -92,7 +123,7 @@ func (g *GitCLI) ModifiedFiles() ([]string, error) {
 
 	var modifiedFiles []string
 	for path, s := range status {
-		if s.Worktree != git.Unmodified {
+		if s.Worktree != git.Unmodified || s.Staging != git.Unmodified {
 			modifiedFiles = append(modifiedFiles, path)
 		}
 	}
