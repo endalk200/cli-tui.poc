@@ -51,7 +51,6 @@ func (e ErrUnknownIssue) Error() string {
 func GenerateCommitMessage(diff string, provider config.Provider) (string, error) {
 	prompt := fmt.Sprintf("Generate a concise conventional commit style message summarizing changes made in this git diff. \n%s", diff)
 
-	var API_KEY string
 	switch provider.Name {
 	case "OpenAI":
 		API_KEY, err := getOpenAIAPIKey(provider.EnvName)

@@ -74,6 +74,28 @@ func (g *GitCLI) StagedFiles() ([]string, error) {
 	return stagedFiles, nil
 }
 
+func (g *GitCLI) AddFiles(files []string) ([]string, error) {
+	workTree, err := g.repo.Worktree()
+	if err != nil {
+		return nil, ErrUnkwownGitIssue{
+			Message: err.Error(),
+		}
+	}
+
+	var stagedFiles []string
+
+	for _, file := range files {
+		if _, addErr := workTree.Add(file); addErr != nil {
+			return nil, ErrUnkwownGitIssue{
+				Message: addErr.Error(),
+			}
+		}
+		stagedFiles = append(stagedFiles, file)
+	}
+
+	return stagedFiles, nil
+}
+
 func (g *GitCLI) AddAllFiles() ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
@@ -106,6 +128,7 @@ func (g *GitCLI) AddAllFiles() ([]string, error) {
 	return nil, nil
 }
 
+// Get all modified files in the working tree and index
 func (g *GitCLI) ModifiedFiles() ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
@@ -130,6 +153,7 @@ func (g *GitCLI) ModifiedFiles() ([]string, error) {
 	return modifiedFiles, nil
 }
 
+// Get all added files in the working tree and index
 func (g *GitCLI) AddedFiles() ([]string, error) {
 	workTree, err := g.repo.Worktree()
 	if err != nil {
@@ -267,9 +291,16 @@ func (g *GitCLI) Commit(message string) error {
 		}
 	}
 
+	repoConfig, err := g.repo.Config()
+	if err != nil {
+		return ErrUnkwownGitIssue{
+			Message: err.Error(),
+		}
+	}
+
 	author := &object.Signature{
-		Name:  "endalk200",
-		Email: "eb808826@gmail.com",
+		Name:  repoConfig.Author.Name,
+		Email: repoConfig.Author.Email,
 		When:  time.Now(),
 	}
 
